@@ -1,0 +1,73 @@
+<?php
+
+namespace Tests\Unit;
+
+use Tests\TestCase;
+use App\Models\Post;
+use App\Repositories\PostRepository;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+class PostControllerTest extends TestCase
+{
+    use RefreshDatabase;
+
+    private $postRepository;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->postRepository = new PostRepository;
+    }
+
+    public function testIndex()
+    {
+        $lang  = 'ua';
+        $count = 2;
+        $index = 1;
+        $posts = [];
+
+        // Dummy data skeleton
+        $data = [
+            'title'       => "Title {$index} for: {$lang}",
+            'description' => "Description {$index} for: {$lang}",
+            'content'     => "Content {$index} for: {$lang}",
+        ];
+
+        do {
+            $this->postRepository->create($lang, $data);
+            array_push($posts, $data);
+            $index++;
+        } while ($index <= $count);
+
+        $response = $this->get("/api/{$lang}/posts");
+
+        $response->assertStatus(200);
+
+        $response->assertJsonCount($count, 'data');
+
+        $response->assertJson([
+            'data' => $posts
+        ]);
+    }
+
+    /*public function testShow()
+    {
+        // Create a dummy post using the PostRepository
+        $post = $this->postRepository->create(['title' => 'Post 1']);
+
+        // Send a GET request to the 'posts/{id}' endpoint
+        $response = $this->get('/api/posts/' . $post->id);
+
+        // Assert that the response has a 200 status code
+        $response->assertStatus(200);
+
+        // Assert that the response contains the created post
+        $response->assertJson([
+            'title' => 'Post 1',
+        ]);
+    }*/
+
+    // Add tests for the 'store', 'update', and 'destroy' methods similarly
+
+}
