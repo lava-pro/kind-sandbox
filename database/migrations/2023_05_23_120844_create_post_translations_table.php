@@ -14,8 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::create('post_translations', function (Blueprint $table) {
-            $table->unsignedInteger('post_id')->index('post_id');
-            $table->unsignedInteger('language_id')->index('language_id');
+            $table->unsignedInteger('post_id')->index('post_translations_post_id_fk');
+            $table->unsignedInteger('language_id')->index('post_translations_language_id_fk');
             $table->string('title');
             $table->text('description');
             $table->text('content');

@@ -14,8 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::create('post_tags', function (Blueprint $table) {
-            $table->unsignedInteger('post_id')->index('post_id');
-            $table->unsignedInteger('tag_id')->index('tag_id');
+            $table->unsignedInteger('post_id')->index('post_tags_post_id_fk');
+            $table->unsignedInteger('tag_id')->index('post_tags_tag_id_fk');
         });
     }
 
