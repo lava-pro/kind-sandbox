@@ -156,14 +156,16 @@ class PostRepository
     {
         $langId = $this->getLangId($lang);
 
-        $results = PostTranslation::where('language_id', $langId)
+        return PostTranslation::where('language_id', $langId)
             ->where(function ($query) use ($sq) {
                 $query->where('title', 'LIKE', "%$sq%")
                     ->orWhere('description', 'LIKE', "%$sq%")
                     ->orWhere('content', 'LIKE', "%$sq%");
+            })
+            ->cursor()
+            ->map(function (PostTranslation $item) {
+                return [$item->post_id => $item->title];
             });
-
-        return $results->cursor();
     }
 
     /**

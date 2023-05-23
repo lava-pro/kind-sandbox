@@ -131,15 +131,7 @@ class PostController extends Controller
 
         $items = $this->post->search($lang, $sq);
 
-        $output = [];
-
-        if ($items) {
-            foreach ($items as $item) {
-                $output[] = "/api/{$lang}/posts/{$item->post_id}";
-            }
-        }
-
-        return response()->json($output);
+        return response()->json($items);
     }
 
 }
