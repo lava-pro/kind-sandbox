@@ -4,27 +4,28 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use App\Repositories\TagRepository;
 use App\Http\Controllers\Controller;
+use App\Repositories\Tag\TagRepositoryInterface;
 
 class TagController extends Controller
 {
     /**
      * Constructor
-     * @param TagRepository $tag
+     * @param TagRepositoryInterface $tagRepository
      */
     public function __construct(
-        private TagRepository $tag
-    ) {}
+        private TagRepositoryInterface $tagRepository
+    ) {
+
+    }
 
     /**
      * Show tag list with pagination.
-     * @param  string  $lang  Language prefix
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(string $lang): JsonResponse
+    public function index(): JsonResponse
     {
-        $tags = $this->tag->getPaginate($lang);
+        $tags = $this->tagRepository->getPaginate();
 
         return response()->json($tags);
     }
@@ -37,7 +38,7 @@ class TagController extends Controller
      */
     public function show(string $lang, int $id): JsonResponse
     {
-        $tag = $this->tag->getById($lang, $id);
+        $tag = $this->tagRepository->getById($id);
 
         return response()->json($tag);
     }
@@ -46,10 +47,9 @@ class TagController extends Controller
      * Store new tag.
      * HTTP Method: POST
      * @param  Request $request
-     * @param  string  $lang    Language prefix
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request, string $lang): JsonResponse
+    public function store(Request $request): JsonResponse
     {
         $this->validate($request, [
             'name'  => 'required|string|min:3|max:32|unique:tags,name',
@@ -58,7 +58,7 @@ class TagController extends Controller
 
         $data = $request->input();
 
-        $tag = $this->tag->create($lang, $data);
+        $tag = $this->tagRepository->create($data);
 
         return response()->json($tag, 201);
     }
@@ -80,7 +80,7 @@ class TagController extends Controller
 
         $data = $request->input();
 
-        $tag = $this->tag->update($lang, $data, $id);
+        $tag = $this->tagRepository->update($id, $data);
 
         return response()->json($tag);
     }
@@ -88,13 +88,13 @@ class TagController extends Controller
     /**
      * Destroy the tag
      * HTTP Method: DELETE
-     * @param  string  $lang   Language prefix
-     * @param  int     $id     Tag id
+     * @param  string  $lang  Language prefix
+     * @param  int     $id    Tag id
      * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(string $lang, int $id): JsonResponse
     {
-        $result = $this->tag->delete($lang, $id);
+        $result = $this->tagRepository->delete($id);
 
         // return response()->json([$result]);
 

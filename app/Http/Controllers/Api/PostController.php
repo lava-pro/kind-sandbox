@@ -4,40 +4,40 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use App\Repositories\PostRepository;
 use App\Http\Controllers\Controller;
+use App\Repositories\Post\PostRepositoryInterface;
 
 class PostController extends Controller
 {
     /**
      * Constructor
-     * @param PostRepository $post
+     * @param  PostRepositoryInterface $postRepository
      */
     public function __construct(
-        private PostRepository $post
-    ) {}
+        private PostRepositoryInterface $postRepository
+    ) {
+
+    }
 
     /**
      * Show post list with pagination.
-     * @param  string  $lang  Language prefix
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(string $lang): JsonResponse
+    public function index(): JsonResponse
     {
-        $posts = $this->post->getPaginate($lang);
+        $posts = $this->postRepository->getPaginate();
 
         return response()->json($posts);
     }
 
     /**
      * Show the single post.
-     * @param  string  $lang  Language prefix
-     * @param  integer $id    Post ID
+     * @param  integer  $id  Post id
      * @return \Illuminate\Http\JsonResponse
      */
     public function show(string $lang, int $id): JsonResponse
     {
-        $post = $this->post->getById($lang, $id);
+        $post = $this->postRepository->getById($id);
 
         return response()->json($post);
     }
@@ -46,10 +46,9 @@ class PostController extends Controller
      * Store new post.
      * HTTP Method: POST
      * @param  Request $request
-     * @param  string  $lang    Language prefix
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request, string $lang): JsonResponse
+    public function store(Request $request): JsonResponse
     {
         $this->validate($request, [
             'translations'             => 'required',
@@ -62,7 +61,7 @@ class PostController extends Controller
 
         $translations = $request->input('translations');
 
-        $post = $this->post->create($lang, $translations);
+        $post = $this->postRepository->create($translations);
 
         if ($request->has('tags')) {
             $post->tags()->attach($request->input('tags.*.id'));
@@ -92,7 +91,7 @@ class PostController extends Controller
 
         $translations = $request->input('translations');
 
-        $post = $this->post->update($lang, $translations, $id);
+        $post = $this->postRepository->update($id, $translations);
 
         if ($request->has('tags')) {
             $post->tags()->sync($request->input('tags.*.id'));
@@ -106,13 +105,13 @@ class PostController extends Controller
     /**
      * Destroy the post
      * HTTP Method: DELETE
-     * @param  string  $lang   Language prefix
-     * @param  integer $id     Post id
+     * @param  string  $lang  Language prefix
+     * @param  integer $id    Post id
      * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(string $lang, int $id): JsonResponse
     {
-        $result = $this->post->delete($lang, $id);
+        $result = $this->postRepository->delete($id);
 
         // return response()->json([$result]);
 
@@ -122,14 +121,13 @@ class PostController extends Controller
     /**
      * Search in post's translations
      * @param  Request $request
-     * @param  string  $lang
      * @return \Illuminate\Http\JsonResponse
      */
-    public function search(Request $request, string $lang): JsonResponse
+    public function search(Request $request): JsonResponse
     {
         $sq = $request->input('sq');
 
-        $items = $this->post->search($lang, $sq);
+        $items = $this->postRepository->search($sq);
 
         return response()->json($items);
     }
