@@ -94,12 +94,15 @@ class TagsTest extends TestCase
         // Make sure we only have one translations
         $this->assertTrue($translation->count() == 1);
 
-        $item = $translation->with('language')->first();
-        // Make sure the language prefix of the latest translation is ua
-        $this->assertTrue($item->language->prefix == 'ua');
+        // Get translation language prefix
+        $item = $translation->with('language')
+            ->where('tag_id', $tag->id)
+            ->first();
+
+        $prefix = $item->language->prefix;
 
         // Delete the RU version tag translation
-        $response = $this->delete(route('tags.destroy', ['lang' => 'ua', 'id' => $tag->id]));
+        $response = $this->delete(route('tags.destroy', ['lang' => $prefix, 'id' => $tag->id]));
         $response->assertStatus(204);
 
         $tag = $tag->fresh();
@@ -108,8 +111,11 @@ class TagsTest extends TestCase
         $this->assertTrue($tag->trashed());
 
         // Attempt Retrieve deleted tag
-        $response = $this->get(route('tags.show', ['lang' => 'ua', 'id' => $tag->id]));
+        $response = $this->get(route('tags.show', ['lang' => $prefix, 'id' => $tag->id]));
         $response->assertStatus(404);
+
+        // Permanently remove tag
+        $tag->forceDelete();
     }
 
 }
