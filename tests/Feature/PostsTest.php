@@ -40,7 +40,7 @@ class PostsTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_retrieving_version_without_translation(): void
+    public function test_retrieving_post_without_translation(): void
     {
         $post = Post::first();
 
@@ -113,7 +113,7 @@ class PostsTest extends TestCase
         // Make sure the post is soft deleted
         $this->assertTrue($post->trashed());
 
-        // Attempt Retrieve deleted post
+        // Attempt retrieve the soft deleted post
         $response = $this->get(route('posts.show', ['lang' => $prefix, 'id' => $post->id]));
         $response->assertStatus(404);
     }

@@ -26,7 +26,7 @@ class TagsTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_retrieving_version_without_translation(): void
+    public function test_retrieving_tag_without_translation(): void
     {
         $tag = Tag::first();
 

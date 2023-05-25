@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Tag\CreateTagRequest;
+use App\Http\Requests\Tag\UpdateTagRequest;
 use App\Repositories\Tag\TagRepositoryInterface;
 
 class TagController extends Controller
@@ -46,16 +48,11 @@ class TagController extends Controller
     /**
      * Store new tag.
      * HTTP Method: POST
-     * @param  Request $request
+     * @param  CreateTagRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request): JsonResponse
+    public function store(CreateTagRequest $request): JsonResponse
     {
-        $this->validate($request, [
-            'name'  => 'required|string|min:3|max:32|unique:tags,name',
-            'title' => 'required|string|min:3|max:64',
-        ]);
-
         $data = $request->input();
 
         $tag = $this->tagRepository->create($data);
@@ -66,18 +63,13 @@ class TagController extends Controller
     /**
      * Update tag.
      * HTTP Method: PUT
-     * @param  Request $request
-     * @param  string  $lang    Language prefix
-     * @param  integer $id      Tag id
+     * @param  UpdateTagRequest $request
+     * @param  string           $lang   Language prefix
+     * @param  integer          $id     Tag id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, string $lang, int $id): JsonResponse
+    public function update(UpdateTagRequest $request, string $lang, int $id): JsonResponse
     {
-        $this->validate($request, [
-            'name'  => 'required|string|min:3|max:32',
-            'title' => 'required|string|min:3|max:64',
-        ]);
-
         $data = $request->input();
 
         $tag = $this->tagRepository->update($id, $data);

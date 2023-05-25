@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Post\PostRequest;
 use App\Repositories\Post\PostRepositoryInterface;
 
 class PostController extends Controller
@@ -45,20 +46,11 @@ class PostController extends Controller
     /**
      * Store new post.
      * HTTP Method: POST
-     * @param  Request $request
+     * @param  PostRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request): JsonResponse
+    public function store(PostRequest $request): JsonResponse
     {
-        $this->validate($request, [
-            'translations'             => 'required',
-            'translations.title'       => 'required|string|min:3',
-            'translations.description' => 'required|string|min:5',
-            'translations.content'     => 'required|string|min:6',
-            'tags'                     => 'nullable|array',
-            'tags.*.id'                => 'required|exists:tags,id',
-        ]);
-
         $translations = $request->input('translations');
 
         $post = $this->postRepository->create($translations);
@@ -73,22 +65,13 @@ class PostController extends Controller
     /**
      * Update the post.
      * HTTP Method: PUT
-     * @param  Request $request
-     * @param  string  $lang    Language prefix
-     * @param  integer $id      Post id
+     * @param  PostRequest $request
+     * @param  string      $lang  Language prefix
+     * @param  integer     $id    Post id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, string $lang, int $id): JsonResponse
+    public function update(PostRequest $request, string $lang, int $id): JsonResponse
     {
-        $this->validate($request, [
-            'translations'             => 'required',
-            'translations.title'       => 'required|string|min:3',
-            'translations.description' => 'required|string|min:5',
-            'translations.content'     => 'required|string|min:6',
-            'tags'                     => 'nullable|array',
-            'tags.*.id'                => 'required|exists:tags,id',
-        ]);
-
         $translations = $request->input('translations');
 
         $post = $this->postRepository->update($id, $translations);
