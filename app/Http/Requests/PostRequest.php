@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Tag;
+namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class UpdateTagRequest extends FormRequest
+class PostRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -15,8 +15,12 @@ class UpdateTagRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'name'  => 'required|string|min:3|max:32|unique:tags,name,'. $this->id,
-            'title' => 'required|string|min:3|max:64',
+            'translations'             => 'required',
+            'translations.title'       => 'required|string|min:3',
+            'translations.description' => 'required|string|min:5',
+            'translations.content'     => 'required|string|min:6',
+            'tags'                     => 'nullable|array',
+            'tags.*.id'                => 'required|exists:tags,id',
         ];
 
         return $rules;

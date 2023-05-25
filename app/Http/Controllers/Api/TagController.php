@@ -4,9 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use App\Http\Requests\TagRequest;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Tag\CreateTagRequest;
-use App\Http\Requests\Tag\UpdateTagRequest;
 use App\Repositories\Tag\TagRepositoryInterface;
 
 class TagController extends Controller
@@ -48,10 +47,10 @@ class TagController extends Controller
     /**
      * Store new tag.
      * HTTP Method: POST
-     * @param  CreateTagRequest $request
+     * @param  TagRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(CreateTagRequest $request): JsonResponse
+    public function store(TagRequest $request): JsonResponse
     {
         $data = $request->input();
 
@@ -63,12 +62,12 @@ class TagController extends Controller
     /**
      * Update tag.
      * HTTP Method: PUT
-     * @param  UpdateTagRequest $request
-     * @param  string           $lang   Language prefix
-     * @param  integer          $id     Tag id
+     * @param  TagRequest $request
+     * @param  string     $lang   Language prefix
+     * @param  integer    $id     Tag id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateTagRequest $request, string $lang, int $id): JsonResponse
+    public function update(TagRequest $request, string $lang, int $id): JsonResponse
     {
         $data = $request->input();
 

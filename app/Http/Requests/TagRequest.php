@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Post;
+namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class PostRequest extends FormRequest
+class TagRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,13 +14,11 @@ class PostRequest extends FormRequest
      */
     public function rules()
     {
+        $exclude = isset($this->id) ? ",{$this->id}" : '';
+
         $rules = [
-            'translations'             => 'required',
-            'translations.title'       => 'required|string|min:3',
-            'translations.description' => 'required|string|min:5',
-            'translations.content'     => 'required|string|min:6',
-            'tags'                     => 'nullable|array',
-            'tags.*.id'                => 'required|exists:tags,id',
+            'name'  => 'required|string|min:3|max:32|unique:tags,name'. $exclude,
+            'title' => 'required|string|min:3|max:64',
         ];
 
         return $rules;

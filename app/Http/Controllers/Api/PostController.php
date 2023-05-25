@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use App\Http\Requests\PostRequest;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Post\PostRequest;
 use App\Repositories\Post\PostRepositoryInterface;
 
 class PostController extends Controller
