@@ -61,11 +61,11 @@ class TagRepository implements TagRepositoryInterface
     {
         $tag = Tag::create(['name' => $data['name']]);
 
-        $translation = new TagTranslation;
-        $translation->tag_id       = $tag->id;
-        $translation->language_id  = $this->langId;
-        $translation->title        = $data['title'];
-        $translation->save();
+        TagTranslation::create([
+            'language_id' => $this->langId,
+            'tag_id'      => $tag->id,
+            'title'       => $data['title']
+        ]);
 
         return $tag;
     }
@@ -86,11 +86,11 @@ class TagRepository implements TagRepositoryInterface
         if ($translation->exists()) {
             $translation->update(['title' => $data['title']]);
         } else {
-            $translation = new TagTranslation;
-            $translation->tag_id       = $tag->id;
-            $translation->language_id  = $this->langId;
-            $translation->title        = $data['title'];
-            $translation->save();
+            TagTranslation::create([
+                'language_id' => $this->langId,
+                'tag_id'      => $tag->id,
+                'title'       => $data['title']
+            ]);
         }
 
         $tag->update(['name' => $data['name']]);

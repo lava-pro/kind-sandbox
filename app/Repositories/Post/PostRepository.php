@@ -78,13 +78,13 @@ class PostRepository implements PostRepositoryInterface
     {
         $post = Post::create();
 
-        $translation = new PostTranslation;
-        $translation->post_id      = $post->id;
-        $translation->language_id  = $this->langId;
-        $translation->title        = $data['title'];
-        $translation->description  = $data['description'];
-        $translation->content      = $data['content'];
-        $translation->save();
+        PostTranslation::create([
+            'post_id'     => $post->id,
+            'language_id' => $this->langId,
+            'title'       => $data['title'],
+            'description' => $data['description'],
+            'content'     => $data['content'],
+        ]);
 
         return $post;
     }
@@ -105,13 +105,13 @@ class PostRepository implements PostRepositoryInterface
         if ($translation->exists()) {
             $translation->update($data);
         } else {
-            $translation = new PostTranslation;
-            $translation->post_id      = $post->id;
-            $translation->language_id  = $this->langId;
-            $translation->title        = $data['title'];
-            $translation->description  = $data['description'];
-            $translation->content      = $data['content'];
-            $translation->save();
+            PostTranslation::create([
+                'post_id'     => $post->id,
+                'language_id' => $this->langId,
+                'title'       => $data['title'],
+                'description' => $data['description'],
+                'content'     => $data['content'],
+            ]);
         }
 
         $post->touch();

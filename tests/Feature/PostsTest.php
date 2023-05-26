@@ -127,11 +127,11 @@ class PostsTest extends TestCase
             $tag = Tag::create(['name' => "Tag: {$i}"]);
             foreach ($prefixes as $prefix) {
                 $language = Language::where('prefix', $prefix)->first();
-                $translation = new TagTranslation;
-                $translation->tag_id       = $tag->id;
-                $translation->language_id  = $language->id;
-                $translation->title        = "Title for: {$prefix}";
-                $translation->save();
+                TagTranslation::create([
+                    'language_id' => $language->id,
+                    'tag_id'      => $tag->id,
+                    'title'       => "Title for: {$prefix}"
+                ]);
             }
             $i++;
         }
